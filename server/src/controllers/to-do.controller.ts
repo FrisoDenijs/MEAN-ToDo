@@ -7,8 +7,8 @@ import * as HttpStatus from 'http-status-codes'
 
 export class ToDoController implements IController {
 
-    get(req: Request, res: Response, connectionString: string, dbName: string) {
-        const db = new MongoDb().connect(connectionString, dbName);
+    get(req: Request, res: Response) {
+        const db = new MongoDb().connect();
         
         connection.collection('todo').find().toArray((err, result) => {
             if (err) {
@@ -21,10 +21,10 @@ export class ToDoController implements IController {
         });
     }    
 
-    post(req: Request, res: Response, connectionString: string, dbName: string) {
+    post(req: Request, res: Response) {
         const db = new MongoDb();
 
-        const connection = db.connect(connectionString, dbName);
+        const connection = db.connect();
         if (connection) {
             connection.collection('todo').save(req.body, (err, result) => {
                 if (err) {
@@ -39,34 +39,13 @@ export class ToDoController implements IController {
             res.json({msg: "could not connect to db"})
             res.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        
     }
 
-    put(req: Request, res: Response, connectionString: string, dbName: string) {
+    put(req: Request, res: Response) {
         throw new Error("Method not implemented.");
     }
-    delete(req: Request, res: Response, connectionString: string, dbName: string) {
+    delete(req: Request, res: Response) {
         throw new Error("Method not implemented.");
     }
 
-}
-
-export function mountToDoRoutes(router: Router, route: string, connectionString: string, dbName: string) {
-    const controller = new ToDoController();
-
-    router.get(route, (req, res) => {
-        controller.get(req, res, connectionString, dbName);
-    });
-
-    router.post(route, (req, res) => {
-        controller.post(req, res, connectionString, dbName);
-    });
-
-    router.put(route, (req, res) => {
-        controller.post(req, res, connectionString, dbName);
-    });
-
-    router.delete(route, (req, res) => {
-        controller.post(req, res, connectionString, dbName);
-    });
 }
