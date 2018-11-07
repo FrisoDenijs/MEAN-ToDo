@@ -8,39 +8,38 @@ import * as HttpStatus from 'http-status-codes'
 export class ToDoController implements IController {
 
     get(req: Request, res: Response, connectionString: string, dbName: string) {
-        res.json({
-            msg: "todo called"
-        })
-        res.statusCode = HttpStatus.OK;
-        // const db = new MongoDb().connect(
-        //     'mongodb://FrisoPrograms:A1b2c3d4@ds024548.mlab.com:24548/mean-to-do',
-        //     'mean-to-do');
+        const db = new MongoDb().connect(connectionString, dbName);
         
-        // connection.collection('todo').find().toArray((err, result) => {
-        //     res.json(result);
-        //     res.statusCode = 200;
-        // });
+        connection.collection('todo').find().toArray((err, result) => {
+            if (err) {
+                res.json(err);
+                res.statusCode = HttpStatus.BAD_REQUEST
+            }
+
+            res.json(result);
+            res.statusCode = HttpStatus.OK;
+        });
     }    
 
     post(req: Request, res: Response, connectionString: string, dbName: string) {
-        res.json(req.body);
-        res.statusCode = HttpStatus.OK;
-        // const db = new MongoDb();
+        const db = new MongoDb();
 
-        // const connection = db.connect(
-        //     'mongodb://FrisoPrograms:A1b2c3d4@ds024548.mlab.com:24548/mean-to-do',
-        //     'mean-to-do');
+        const connection = db.connect(connectionString, dbName);
+        if (connection) {
+            connection.collection('todo').save(req.body, (err, result) => {
+                if (err) {
+                    res.json(err);
+                    res.statusCode = HttpStatus.BAD_REQUEST
+                }
+    
+                res.json(result);
+                res.statusCode = HttpStatus.OK;
+            });
+        } else {
+            res.json({msg: "could not connect to db"})
+            res.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
         
-        // connection.collection('todo').save(req.body, (err, result) => {
-        //     if (err) {
-
-        //         res.json(err);
-        //         res.statusCode = 200;
-        //     }
-
-        //     res.json(result);
-        //     res.statusCode = 200;
-        // });
     }
 
     put(req: Request, res: Response, connectionString: string, dbName: string) {
