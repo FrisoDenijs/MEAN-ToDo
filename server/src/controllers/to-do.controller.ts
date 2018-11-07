@@ -10,15 +10,22 @@ export class ToDoController implements IController {
     get(req: Request, res: Response) {
         const db = new MongoDb().connect();
         
-        connection.collection('todo').find().toArray((err, result) => {
-            if (err) {
-                res.json(err);
-                res.statusCode = HttpStatus.BAD_REQUEST
-            }
-
-            res.json(result);
-            res.statusCode = HttpStatus.OK;
-        });
+        const collection = connection.collection('todo').find();
+        
+        if (collection) {
+            collection.toArray((err, result) => {
+                if (err) {
+                    res.json(err);
+                    res.statusCode = HttpStatus.BAD_REQUEST
+                }
+    
+                res.json(result);
+                res.statusCode = HttpStatus.OK;
+            });
+        } else {
+            res.json({ msg: 'collection not found'});
+            res.statusCode = HttpStatus.NOT_FOUND;
+        }
     }    
 
     post(req: Request, res: Response) {
