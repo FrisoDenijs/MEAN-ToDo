@@ -1,39 +1,42 @@
 import { Request, Response} from 'express';
 import { IController } from "./controller.interface";
-import { Router } from "express-serve-static-core";
 import { MongoDb } from '../db/mongo.db';
-import { connection } from 'mongoose';
 import * as HttpStatus from 'http-status-codes'
 
 export class ToDoController implements IController {
 
     get(req: Request, res: Response) {
-        const db = new MongoDb().connect();
-        
-        const collection = connection.collection('todo').find();
-        
-        if (collection) {
-            collection.toArray((err, result) => {
-                if (err) {
-                    res.json(err);
+        const mongo = new MongoDb();
+        mongo.connect();
+        const db = mongo.getDb();
+        const collection = db.collection('todo', (error, collection) => {
+            if (error) {
+                res.json(error);
+                res.statusCode = HttpStatus.BAD_REQUEST
+                return;
+            }
+
+            collection.find().toArray((error, result) => {
+                if (error) {
+                    res.json(error);
                     res.statusCode = HttpStatus.BAD_REQUEST
                 }
     
                 res.json(result);
                 res.statusCode = HttpStatus.OK;
-            });
-        } else {
-            res.json({ msg: 'collection not found'});
-            res.statusCode = HttpStatus.NOT_FOUND;
-        }
+            })
+        });
+
+        mongo.close();
     }    
 
     post(req: Request, res: Response) {
-        const db = new MongoDb();
+        const mongo = new MongoDb();
+        mongo.connect();
+        const db = mongo.getDb();
 
-        const connection = db.connect();
-        if (connection) {
-            connection.collection('todo').save(req.body, (err, result) => {
+        if (db) {
+            db.collection('todo').save(req.body, (err, result) => {
                 if (err) {
                     res.json(err);
                     res.statusCode = HttpStatus.BAD_REQUEST
