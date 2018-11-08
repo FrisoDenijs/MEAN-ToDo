@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from "body-parser";
 import { Router } from 'express-serve-static-core';
-import { mountRoutes } from './routes/routes.config';
+import { mountRoutes } from './routes';
 
 //based on https://blog.risingstack.com/building-a-node-js-app-with-typescript-tutorial/
 export class App {
