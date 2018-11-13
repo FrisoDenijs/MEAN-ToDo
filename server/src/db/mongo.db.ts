@@ -1,40 +1,56 @@
-import { MongoClient, Db } from "mongodb";
+import { Db, MongoClient } from 'mongodb';
 
+/**
+ * Class to connect with mongo and get the todo db
+ *
+ * @export
+ */
 export class MongoDb {
+    private client: MongoClient;
     private readonly connectionString = process.env.DB_CONNECTION_STRING || 'mongodb://localhost:27017';
     private readonly dbName = process.env.DB_NAME || 'mean-to-do';
-    private client: MongoClient;
 
-    async connect() {
-        console.log('connecting to mongo')
+    /**
+     * closes the connection with mongo client
+     *
+     */
+    public close() {
+        if (this.client) {
+            this.client.close()
+            .then()
+            .catch(error => {
+                console.error(error);
+            });
+        } else {
+            console.error('close: client is undefined');
+        }
+    }
+
+    /**
+     * connects to mongo client
+     *
+     */
+    public async connect() {
         try {
             if (!this.client) {
-                console.log('setting client');
-                this.client = await MongoClient.connect(this.connectionString, {useNewUrlParser: true});
-                console.log(this.client);
+                this.client = await MongoClient.connect(this.connectionString, {'useNewUrlParser': true});
             }
         } catch(error) {
-            console.log('error during connecting to mongo: ');
             console.error(error);
         }
     }
 
-    getDb(): Db {
-        console.log('getting db')
+    /**
+     * gets the todo db from mongo
+     *
+     */
+    public getDb(): Db {
         if (this.client) {
-            console.log(`client exists, returning db ${this.dbName}`)
             return this.client.db(this.dbName);
         } else {
-            console.error('getDb: client is undefined')
-            return undefined;
-        }
-    }
+            console.error('no db found');
 
-    close() {
-        if (this.client) {
-            this.client.close();
-        } else {
-            console.error('close: client is undefined');
+            return undefined;
         }
     }
 }

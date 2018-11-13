@@ -1,20 +1,26 @@
+import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import * as bodyParser from "body-parser";
+// tslint:disable-next-line:no-implicit-dependencies
 import { Router } from 'express-serve-static-core';
+
 import { mountRoutes } from './routes';
 
-//based on https://blog.risingstack.com/building-a-node-js-app-with-typescript-tutorial/
+/**
+ * class for defining the routes and used
+ *
+ * @export
+ */
 export class App {
     public express;
 
     public constructor() {
         this.express = express();
         const router = express.Router();
-        
+
         this.express.use(bodyParser.urlencoded({
-            extended: false
+            'extended': false,
          }));
-         
+
         this.express.use(bodyParser.json());
 
         this.mountTestRoute(router);
@@ -23,11 +29,16 @@ export class App {
         this.express.use('/', router);
     }
 
+    /**
+     * tmp routes for connection testing purposes
+     *
+     */
+    // tslint:disable-next-line:prefer-function-over-method
     private mountTestRoute(router: Router): void {
         router.get('/', (req, res) => {
             res.json({
-                message: 'Hello World!'
-            })
+                'message': 'Hello World!',
+            });
         });
 
         router.post('/', (req, res) => {
