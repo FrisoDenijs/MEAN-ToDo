@@ -176,7 +176,7 @@
             "arguments",
             "statements",
             "members",
-            "elements",
+            "elements"
         ],
         "array-type": true,
         "arrow-parens": [
