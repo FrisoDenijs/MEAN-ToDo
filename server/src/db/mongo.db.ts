@@ -5,18 +5,18 @@ export class MongoDb {
     private readonly dbName = process.env.DB_NAME || 'mean-to-do';
     private client: MongoClient;
 
-    connect() {
+    async connect() {
         console.log('connecting to mongo')
-        MongoClient.connect(this.connectionString, {useNewUrlParser: true})
-        .then(client => {
-            console.log('setting client');
-            this.client = client;
-            console.log(this.client);
-        })
-        .catch(error => {
+        try {
+            if (!this.client) {
+                console.log('setting client');
+                this.client = await MongoClient.connect(this.connectionString, {useNewUrlParser: true});
+                console.log(this.client);
+            }
+        } catch(error) {
             console.log('error during connecting to mongo: ');
             console.error(error);
-        });
+        }
     }
 
     getDb(): Db {

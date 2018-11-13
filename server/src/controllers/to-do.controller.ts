@@ -5,11 +5,12 @@ import * as HttpStatus from 'http-status-codes'
 
 export class ToDoController implements IController {
 
-    get(req: Request, res: Response) {
+    async get(req: Request, res: Response) {
         const mongo = new MongoDb();
-        mongo.connect();
+        await mongo.connect();
         const db = mongo.getDb();
-        const collection = db.collection('todo', (error, collection) => {
+        console.log(db);
+        db.collection('todo', (error, collection) => {
             if (error) {
                 res.json(error);
                 res.statusCode = HttpStatus.BAD_REQUEST
@@ -30,9 +31,9 @@ export class ToDoController implements IController {
         mongo.close();
     }    
 
-    post(req: Request, res: Response) {
+    async post(req: Request, res: Response) {
         const mongo = new MongoDb();
-        mongo.connect();
+        await mongo.connect();
         const db = mongo.getDb();
 
         if (db) {
