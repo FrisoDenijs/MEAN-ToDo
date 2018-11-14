@@ -33,6 +33,7 @@ export class MongoDb {
     public async connect() {
         try {
             if (!this.client) {
+                console.info(`Connectiong to ${this.connectionString}`);
                 this.client = await MongoClient.connect(this.connectionString, {'useNewUrlParser': true});
             }
         } catch(error) {
@@ -46,6 +47,8 @@ export class MongoDb {
      */
     public getDb(): Db {
         if (this.client) {
+            console.info(`getting db ${this.dbName}`);
+
             return this.client.db(this.dbName);
         } else {
             console.error('no db found');
