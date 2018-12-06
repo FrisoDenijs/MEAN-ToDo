@@ -15,5 +15,6 @@ https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 https://palantir.github.io/tslint/usage/configuration/
 https://palantir.github.io/tslint/rules/
 
-## Questions asked
+## Stackoverflow
 https://stackoverflow.com/q/53216884/1984657
+https://stackoverflow.com/q/8233014/1984657
