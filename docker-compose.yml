@@ -4,12 +4,14 @@ services:
     build: 
       context: ./server
       args:
-        port: '3001'
-        dbConnectionString: 'mongodb://localhost:27017'
+        port: '3000'
+        dbConnectionString: 'mongodb://database'
         dbName: 'todo'
     ports:
-    - '3001:3001'
-  db:
+    - '3000:3000'
+    links:
+    - database
+  database:
     image: mongo:4.1
     ports:
     - '27017:27017'
